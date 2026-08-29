@@ -1,8 +1,15 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import pandas as pd
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = "change_this_to_a_random_secret_in_production"
+
+# Simple credential (username=admin, password=admin1)
+VALID_USER = {
+    "username": "admin",
+    "password": "admin1"
+}
 
 # Load sample attendance data (CSV). Replace with DB if diperlukan.
 DATA_PATH = "data/attendance.csv"
@@ -35,6 +42,37 @@ def filter_data(name=None, counter=None, start_date=None, end_date=None):
             pass
     d = d.sort_values("date")
     return d
+
+# Require login for protected routes
+@app.before_request
+def require_login():
+    # Allow access to login page, static files and favicon without auth
+    allowed_endpoints = ["login", "static"]
+    if request.endpoint in allowed_endpoints:
+        return
+    if not session.get("user"):
+        return redirect(url_for("login"))
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        if username == VALID_USER["username"] and password == VALID_USER["password"]:
+            session["user"] = username
+            flash("Berhasil login.", "success")
+            return redirect(url_for("index"))
+        else:
+            flash("Username atau password salah.", "error")
+            return render_template("login.html", username=username)
+
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Anda telah logout.", "info")
+    return redirect(url_for("login"))
 
 @app.route("/", methods=["GET"])
 def index():

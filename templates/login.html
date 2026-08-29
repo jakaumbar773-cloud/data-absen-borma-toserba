@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="max-width:420px; margin:20px auto;">
+  <h2 style="margin-top:0;">Login</h2>
+  <form method="post" action="{{ url_for('login') }}">
+    <div style="margin-bottom:8px;">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" value="{{ username if username is defined else '' }}" required />
+    </div>
+    <div style="margin-bottom:12px;">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required />
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button type="submit" class="btn-ok">Masuk</button>
+      <div style="color:#666; font-size:13px;">Creds: <strong>admin</strong> / <strong>admin1</strong></div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -8,6 +8,9 @@ Tampilan menggunakan palet kuning → orange, menampilkan logo, dan form filter:
 - Tanggal Akhir (date)
 Tombol "Oke" untuk menampilkan hasil, dan "Print" untuk mencetak (window.print).
 
+Tambahan:
+- Menu login sederhana: username=admin, password=admin1
+
 Cara menjalankan:
 1. Buat virtualenv:
    python -m venv venv
@@ -22,6 +25,11 @@ Cara menjalankan:
 4. Buka di browser:
    http://127.0.0.1:5000
 
+Login credentials (untuk development):
+- username: admin
+- password: admin1
+
 Catatan:
 - Ganti file data/attendance.csv dengan data nyata atau ubah app.py untuk membaca database (SQLite/MySQL).
 - Logo saat ini berupa static/logo.svg; ganti dengan logo resmi Borma Toserba bila tersedia.
+- Jangan gunakan `app.secret_key` yang ada sekarang di produksi; ganti dengan nilai acak yang aman.

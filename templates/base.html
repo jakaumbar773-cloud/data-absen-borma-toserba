@@ -26,36 +26,61 @@
       align-items:center;
       gap:16px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      justify-content:space-between;
     }
+    .header-left{ display:flex; align-items:center; gap:16px; }
     header img.logo{ height:48px; width:auto; display:block; }
     header h1{ font-size:20px; margin:0; color:#2b2b2b; letter-spacing:0.2px; }
     main{ padding:24px; max-width:1100px; margin:20px auto; }
     .card{ background:var(--card); padding:18px; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,0.06);}
     .form-row{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
     label{ font-size:14px; margin-bottom:6px; display:block; color:#444; }
-    select,input[type="date"],input[type="number"]{ padding:8px 10px; border-radius:6px; border:1px solid #e6d9c4; min-width:180px; }
+    select,input[type="date"],input[type="number"],input[type="text"],input[type="password"]{ padding:8px 10px; border-radius:6px; border:1px solid #e6d9c4; min-width:180px; }
     button{ padding:10px 14px; border-radius:8px; border:0; cursor:pointer; font-weight:600; }
     .btn-ok{ background: #2b8a3e; color:white; }
     .btn-print{ background: #FF9100; color:white; }
     table{ width:100%; border-collapse:collapse; margin-top:12px; }
     th,td{ text-align:left; padding:8px 10px; border-bottom:1px solid #f0e6d1; }
     .meta{ margin-top:8px; color:#666; font-size:14px; }
+    .auth-links{ font-size:14px; color:#2b2b2b; }
+    .auth-links a{ color:#2b2b2b; text-decoration:none; font-weight:600; margin-left:12px; }
     @media (max-width:700px){
       .form-row{ flex-direction:column; }
     }
+    .flash{ padding:10px 12px; border-radius:8px; margin-bottom:12px; }
+    .flash.success{ background:#e6f8ea; color:#1b6a2b; border:1px solid #bfe9c7; }
+    .flash.error{ background:#ffece6; color:#992a00; border:1px solid #f5c6b8; }
+    .flash.info{ background:#fff6db; color:#8a5b00; border:1px solid #f0dfb4; }
   </style>
   {% block head %}{% endblock %}
 </head>
 <body>
   <header>
-    <img src="{{ url_for('static', filename='logo.svg') }}" alt="Borma Toserba" class="logo" />
-    <div>
-      <h1>Data Absen - Head Office</h1>
-      <div style="font-size:13px;color:#2b2b2b;opacity:0.9">Borma Toserba</div>
+    <div class="header-left">
+      <img src="{{ url_for('static', filename='logo.svg') }}" alt="Borma Toserba" class="logo" />
+      <div>
+        <h1>Data Absen - Head Office</h1>
+        <div style="font-size:13px;color:#2b2b2b;opacity:0.9">Borma Toserba</div>
+      </div>
+    </div>
+    <div class="auth-links">
+      {% if session.get('user') %}
+        Halo, <strong>{{ session.get('user') }}</strong> | <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+      {% endif %}
     </div>
   </header>
 
   <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="flash {{ category }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
   </main>
 
