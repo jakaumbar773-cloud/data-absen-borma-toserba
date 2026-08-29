@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <form method="get" action="{{ url_for('index') }}">
+    <div class="form-row">
+      <div>
+        <label for="name">Pilih Nama</label>
+        <select id="name" name="name">
+          <option value="">-- Semua Nama --</option>
+          {% for n in names %}
+            <option value="{{ n }}" {% if selected_name==n %}selected{% endif %}>{{ n }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label for="counter">Counter</label>
+        <input type="number" id="counter" name="counter" value="{{ selected_counter }}" min="0" placeholder="Masukkan counter"/>
+      </div>
+
+      <div>
+        <label for="start">Tanggal Awal</label>
+        <input type="date" id="start" name="start" value="{{ start_date }}"/>
+      </div>
+
+      <div>
+        <label for="end">Tanggal Akhir</label>
+        <input type="date" id="end" name="end" value="{{ end_date }}"/>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
+      <button type="submit" class="btn-ok">Oke</button>
+      <button type="button" class="btn-print" onclick="doPrint()">Print</button>
+      <div class="meta">Hasil: <strong>{{ count }}</strong> baris</div>
+    </div>
+  </form>
+
+  {% if records and records|length > 0 %}
+    <table aria-label="Hasil Absen">
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Counter</th>
+          <th>Tanggal</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+          <tr>
+            <td>{{ r['name'] }}</td>
+            <td>{{ r['counter'] }}</td>
+            <td>{{ r['date'].strftime("%Y-%m-%d") if r['date'] else '' }}</td>
+            <td>{{ r['status'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% elif records is not none %}
+    <div style="margin-top:12px; color:#666">Tidak ada data sesuai filter.</div>
+  {% endif %}
+</div>
+{% endblock %}
